@@ -75,19 +75,21 @@ struct Context {
         assert(Solution.size() <= C * S && "Too many steps.");
 
         map<pair<int, int>, int> compiledOnServer;
+        int earliestAvailableEverywhere[MAX_N];
         int earliestAvailable[MAX_N];
         memset(earliestAvailable, -1, sizeof(earliestAvailable));
+        memset(earliestAvailableEverywhere, -1, sizeof(earliestAvailableEverywhere));
         int timeOnServer[MAX_S] = {};
 
         auto getEarliestAvailable = [&](int file, int server) {
-            if (earliestAvailable[file] < 0) {
+            if (earliestAvailableEverywhere[file] < 0) {
                 return -1;
             }
             auto it = compiledOnServer.find(make_pair(file, server));
             if (it != compiledOnServer.end()) {
                 return it->second;
             }
-            return earliestAvailable[file];
+            return earliestAvailableEverywhere[file];
         };
 
         for (auto& [file, server] : Solution) {
@@ -98,18 +100,33 @@ struct Context {
                 earliestStart = max(earliestStart, tDep);
             }
             auto compileFinish = earliestStart + CT[file];
-            auto replicateFinish = compileFinish + RT[file];
             if (earliestAvailable[file] < 0) {
-                earliestAvailable[file] = replicateFinish;
+                earliestAvailable[file] = compileFinish;
             } else {
-                earliestAvailable[file] = min(earliestAvailable[file], replicateFinish);
+                earliestAvailable[file] = min(earliestAvailable[file], compileFinish);
+            }
+            auto replicateFinish = compileFinish + RT[file];
+            if (earliestAvailableEverywhere[file] < 0) {
+                earliestAvailableEverywhere[file] = replicateFinish;
+            } else {
+                earliestAvailableEverywhere[file] = min(earliestAvailableEverywhere[file], replicateFinish);
             }
             assert(compiledOnServer.find(make_pair(file, server)) == compiledOnServer.end() && "Compiling same file on same server");
             compiledOnServer[make_pair(file, server)] = earliestStart + CT[file];
             timeOnServer[server] = compileFinish;
         }
 
+        uint64_t score = 0;
+        for (size_t i = 0; i < T; ++i) {
+            if (earliestAvailable[i] < 0) {
+                continue;
+            }
+            if (earliestAvailable[i] <= Deadline[i]) {
+                score += Points[i] + (Deadline[i] - earliestAvailable[i]);
+            }
+        }
 
+        return score;
     }
 
     uint64_t GetScore() {
