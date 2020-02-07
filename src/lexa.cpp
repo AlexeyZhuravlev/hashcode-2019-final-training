@@ -17,8 +17,42 @@
 using namespace std;
 
 struct MySolver : public Context {
+
+    int GetCost(int file, std::vector<int>& required) {
+        int result = 0;
+        std::queue<int> elements;
+        elements.push(file);
+        while (!elements.empty()) {
+            int file = elements.front();
+            required.push_back(file);
+            elements.pop();
+            result += CT[file];
+            for (int dep : Deps[file]) {
+                elements.push(dep);
+            }
+        }
+        std::reverse(required.begin(), required.end());
+        return result;
+    }
+
     void Solve() {
-        // Solution goes here
+        std::vector<std::pair<int, std::vector<int>>> results;
+        for (int i = 0; i < T; ++i) {
+            int target = Target[i];
+            std::vector<int> targetElements;
+            int time = GetCost(target, targetElements);
+            int deadline = Deadline[i];
+            int points = Points[i];
+            if (time <= deadline) {
+                int reward = points + deadline - time;
+                results.push_back(std::make_pair(reward, targetElements));
+            }
+        }
+        std::sort(results.rbegin(), results.rend());
+        for (int i = 0; i < results.size(); ++i) {
+            int serverNumber =  
+            Solution.push_back(std::make_pair);
+        }
     }
 };
 
