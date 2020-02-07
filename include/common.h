@@ -71,10 +71,10 @@ struct Context {
         }
     }
 
-    void Verify() {
+    uint64_t Verify() {
         assert(Solution.size() <= C * S && "Too many steps.");
 
-        unordered_map<pair<int, int>, int> compiledOnServer;
+        map<pair<int, int>, int> compiledOnServer;
         int earliestAvailable[MAX_N];
         memset(earliestAvailable, -1, sizeof(earliestAvailable));
         int timeOnServer[MAX_S] = {};
@@ -104,12 +104,16 @@ struct Context {
             } else {
                 earliestAvailable[file] = min(earliestAvailable[file], replicateFinish);
             }
+            assert(compiledOnServer.find(make_pair(file, server)) == compiledOnServer.end() && "Compiling same file on same server");
             compiledOnServer[make_pair(file, server)] = earliestStart + CT[file];
+            timeOnServer[server] = compileFinish;
         }
+
+
     }
 
-    int GetScore() {
-        return 0;
+    uint64_t GetScore() {
+        return Verify();
     }
 
     void Better(const int iterations = 1000, const int generation = 100) {
