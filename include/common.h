@@ -50,14 +50,14 @@ struct Context {
 
             size_t n_deps;
             cin >> n_deps;
-            for (size_t i = 0; i < n_deps; ++i) {
+            for (size_t j = 0; j < n_deps; ++j) {
                 string dep_name;
                 cin >> dep_name;
                 _deps[i].emplace_back(std::move(dep_name));
             }
         }
         for (size_t i = 0; i < C; ++i) {
-            for (auto j : _deps[i]) {
+            for (auto& j : _deps[i]) {
                 Deps[i].push_back(NameToID[j]);
             }
         }
