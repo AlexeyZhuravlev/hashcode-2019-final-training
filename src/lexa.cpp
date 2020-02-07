@@ -52,7 +52,7 @@ struct MySolver : public Context {
         for (int i = 0; i < results.size(); ++i) {
             int serverNumber = i % S;
             for (int task : results[i].second) {
-                Solution.push_back(std::make_pair(serverNumber, task));
+                Solution.push_back(std::make_pair(task, serverNumber));
             }
         }
     }
