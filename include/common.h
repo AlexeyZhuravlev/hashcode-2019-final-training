@@ -17,7 +17,7 @@
 using namespace std;
 
 struct Context {
-    using TSolution = void;
+    using TSolution = int;
     TSolution solution;
 
     void Input() {
