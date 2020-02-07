@@ -45,10 +45,8 @@ struct MySolver : public Context {
             int time = GetCost(target, targetElements);
             int deadline = Deadline[i];
             int points = Points[i];
-            if (time <= deadline) {
-                int reward = points + deadline - time;
-                results.push_back(std::make_pair(reward, targetElements));
-            }
+            int reward = points + deadline - time;
+            results.push_back(std::make_pair(reward, targetElements));
         }
         std::sort(results.rbegin(), results.rend());
         for (int i = 0; i < results.size(); ++i) {
