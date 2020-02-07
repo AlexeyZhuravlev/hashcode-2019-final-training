@@ -17,6 +17,7 @@
 using namespace std;
 
 struct MySolver : public Context {
+    std::vector<std::set<int>> serverToTasks;
 
     int GetCost(int file, std::vector<int>& required) {
         int result = 0;
@@ -36,6 +37,7 @@ struct MySolver : public Context {
     }
 
     void Solve() {
+        serverToTasks.resize(S);
         std::vector<std::pair<int, std::vector<int>>> results;
         for (int i = 0; i < T; ++i) {
             int target = Target[i];
@@ -52,7 +54,10 @@ struct MySolver : public Context {
         for (int i = 0; i < results.size(); ++i) {
             int serverNumber = i % S;
             for (int task : results[i].second) {
-                Solution.push_back(std::make_pair(task, serverNumber));
+                if (serverToTasks[serverNumber].count(task) == 0) {
+                    serverToTasks[serverNumber].insert(task);
+                    Solution.push_back(std::make_pair(task, serverNumber));
+                }
             }
         }
     }
