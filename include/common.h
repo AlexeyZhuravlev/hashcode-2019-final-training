@@ -89,7 +89,7 @@ struct Context {
             }
             auto it = compiledOnServer.find(make_pair(file, server));
             if (it != compiledOnServer.end()) {
-                return it->second;
+                return min(earliestAvailableEverywhere[file], it->second);
             }
             return earliestAvailableEverywhere[file];
         };
@@ -114,17 +114,18 @@ struct Context {
                 earliestAvailableEverywhere[file] = min(earliestAvailableEverywhere[file], replicateFinish);
             }
             assert(compiledOnServer.find(make_pair(file, server)) == compiledOnServer.end() && "Compiling same file on same server");
-            compiledOnServer[make_pair(file, server)] = earliestStart + CT[file];
+            compiledOnServer[make_pair(file, server)] = compileFinish;
             timeOnServer[server] = compileFinish;
         }
 
         uint64_t score = 0;
         for (size_t i = 0; i < T; ++i) {
-            if (earliestAvailable[i] < 0) {
+            int f = Target[i];
+            if (earliestAvailable[f] < 0) {
                 continue;
             }
-            if (earliestAvailable[i] <= Deadline[i]) {
-                score += Points[i] + (Deadline[i] - earliestAvailable[i]);
+            if (earliestAvailable[f] <= Deadline[i]) {
+                score += Points[i] + (Deadline[i] - earliestAvailable[f]);
             }
         }
 
