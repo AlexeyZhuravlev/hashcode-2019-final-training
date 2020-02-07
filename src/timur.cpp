@@ -18,14 +18,40 @@ using namespace std;
 
 struct MySolver : public Context {
     priority_queue<pair<int, int>> Events;
+    set<int> Dependants[MAX_N], GlobalDependants[MAX_N];
+
     int Everywhere[MAX_N];
     int OnServer[MAX_S][MAX_N];
 
     double CalculateScore(int task, int time, int minStartTime, int server) {
-        return -minStartTime;
+        int targetsScore = 0;
+        for (int i = 0; i < T; ++i) {
+            int tid = Target[i];
+            if (minStartTime + CT[task] + (task == tid ? 0 : CT[tid]) <= Deadline[i]) {
+
+                if (GlobalDependants[task].count(tid) || task == tid) {
+                    targetsScore += Points[i];
+                }
+
+            }
+        }
+        if (!targetsScore) {
+            return -1e9;
+        } else {
+            return targetsScore + (time - minStartTime);
+        }
     }
 
     void Solve() {
+        for (int i = C - 1; i >= 0; --i) {
+            for (auto dep : Deps[i]) {
+                Dependants[dep].emplace(i);
+                GlobalDependants[dep].emplace(i);
+                GlobalDependants[dep].insert(GlobalDependants[i].begin(), GlobalDependants[i].end());
+            }
+        }
+
+
         for (int i = 0; i < S; ++i) {
             Events.emplace(0, i);
         }
