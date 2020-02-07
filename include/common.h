@@ -19,8 +19,8 @@ using namespace std;
 const int MAX_N = 100005;
 
 struct Context {
-    using TSolution = int;
-    TSolution solution;
+    using TSolution = vector<pair<string, int>>;
+    TSolution Solution;
 
     vector<string> _deps[MAX_N];
 
@@ -52,7 +52,10 @@ struct Context {
     }
 
     void Output() {
-    
+        cout << Solution.size() << endl;
+        for (auto& p : Solution) {
+            cout << p.first << " " << p.second << endl;
+        }
     }
 
     void Verify() {
