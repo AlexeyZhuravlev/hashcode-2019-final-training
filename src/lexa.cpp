@@ -50,8 +50,10 @@ struct MySolver : public Context {
         }
         std::sort(results.rbegin(), results.rend());
         for (int i = 0; i < results.size(); ++i) {
-            int serverNumber =  
-            Solution.push_back(std::make_pair);
+            int serverNumber = i % S;
+            for (int task : results[i].second) {
+                Solution.push_back(std::make_pair(serverNumber, task));
+            }
         }
     }
 };
