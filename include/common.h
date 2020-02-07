@@ -20,23 +20,27 @@ const int MAX_N = 100005;
 const int MAX_S = 105;
 const int INF = 2000000000;
 
+vector<string> _deps[MAX_N];
+
+size_t C, T, S;
+vector<int> Deps[MAX_N];
+unordered_map<string, int> NameToID;
+string Name[MAX_N];
+int CT[MAX_N];
+int RT[MAX_N];
+
+string TargetName[MAX_N];
+int Target[MAX_N];
+int Deadline[MAX_N];
+int Points[MAX_N];
+
+int earliestAvailableEverywhere[MAX_N];
+int earliestAvailable[MAX_N];
+int timeOnServer[MAX_S];
+
 struct Context {
     using TSolution = vector<pair<int, int>>;
     TSolution Solution;
-
-    vector<string> _deps[MAX_N];
-
-    size_t C, T, S;
-    vector<int> Deps[MAX_N];
-    unordered_map<string, int> NameToID;
-    string Name[MAX_N];
-    int CT[MAX_N];
-    int RT[MAX_N];
-
-    string TargetName[MAX_N];
-    int Target[MAX_N];
-    int Deadline[MAX_N];
-    int Points[MAX_N];
 
     void Input() {
         cin >> C >> T >> S;
@@ -75,11 +79,9 @@ struct Context {
         assert(Solution.size() <= C * S && "Too many steps.");
 
         map<pair<int, int>, int> compiledOnServer;
-        int earliestAvailableEverywhere[MAX_N];
-        int earliestAvailable[MAX_N];
         memset(earliestAvailable, -1, sizeof(earliestAvailable));
         memset(earliestAvailableEverywhere, -1, sizeof(earliestAvailableEverywhere));
-        int timeOnServer[MAX_S] = {};
+        memset(timeOnServer, 0, sizeof(timeOnServer));
 
         auto getEarliestAvailable = [&](int file, int server) {
             if (earliestAvailableEverywhere[file] < 0) {
