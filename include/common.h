@@ -28,7 +28,13 @@ struct Context {
     vector<int> Deps[MAX_N];
     unordered_map<string, int> NameToID;
     string Name[MAX_N];
-    int CT[MAX_N], RT[MAX_N];
+    int CT[MAX_N];
+    int RT[MAX_N];
+
+    string TargetName[MAX_N];
+    int Target[MAX_N];
+    int Deadline[MAX_N];
+    int Points[MAX_N];
 
     void Input() {
         cin >> C >> T >> S;
@@ -49,6 +55,11 @@ struct Context {
                 Deps[i].push_back(NameToID[j]);
             }
         }
+
+        for (size_t i = 0; i < T; ++i) {
+            cin >> TargetName[i] >> Deadline[i] >> Points[i];
+            Target[i] = NameToID[TargetName[i]];
+        }
     }
 
     void Output() {
@@ -59,7 +70,11 @@ struct Context {
     }
 
     void Verify() {
-        
+        assert(Solution.size() <= C * S && "Too many steps.");
+
+        for (auto& p : Solution) {
+
+        }
     }
 
     int GetScore() {
