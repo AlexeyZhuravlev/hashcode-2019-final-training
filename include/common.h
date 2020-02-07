@@ -16,7 +16,7 @@
 
 using namespace std;
 
-const int MAX_N = 100005;
+const int MAX_N = 10005;
 const int MAX_S = 105;
 const int INF = 2000000000;
 
